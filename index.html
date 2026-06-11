@@ -1350,7 +1350,8 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
-      min-height: 126px;
+      min-height: 0;
+      height: clamp(92px, 13vh, 126px);
     }
 
     .rewrite-shot {
@@ -1378,6 +1379,81 @@
       color: #f1fbff;
       font-weight: 850;
       font-size: 0.88rem;
+    }
+
+    @media (max-height: 820px) and (min-width: 761px) {
+      .rewrite-slide .rewrite-layout {
+        gap: 14px;
+      }
+
+      .rewrite-slide .legacy-board,
+      .rewrite-slide .new-board {
+        gap: 10px;
+        padding: 18px;
+      }
+
+      .rewrite-slide .legacy-items,
+      .rewrite-slide .new-flow-list {
+        gap: 9px;
+      }
+
+      .rewrite-slide .legacy-card {
+        grid-template-columns: 44px 1fr;
+        gap: 10px;
+        padding: 10px 12px;
+      }
+
+      .rewrite-slide .legacy-card b {
+        width: 40px;
+        height: 40px;
+      }
+
+      .rewrite-slide .flow-stage {
+        grid-template-columns: 36px 1fr;
+        gap: 8px;
+        padding: 9px;
+      }
+
+      .rewrite-slide .stage-proof {
+        display: flex;
+        align-items: center;
+        min-height: 38px;
+        padding: 6px 8px;
+      }
+
+      .rewrite-slide .board-title span {
+        font-size: 0.82rem;
+      }
+
+      .rewrite-slide .legacy-card,
+      .rewrite-slide .legacy-warning,
+      .rewrite-slide .flow-stage p,
+      .rewrite-slide .stage-proof {
+        font-size: 0.86rem;
+        line-height: 1.28;
+      }
+
+      .rewrite-slide .flow-stage b {
+        font-size: 1rem;
+      }
+
+      .rewrite-slide .rewrite-shot-row {
+        gap: 10px;
+        height: clamp(72px, 12vh, 96px);
+      }
+
+      .rewrite-slide .rewrite-shot span {
+        left: 8px;
+        bottom: 6px;
+        padding: 4px 7px;
+        font-size: 0.76rem;
+      }
+    }
+
+    @media (max-height: 820px) and (min-width: 1201px) {
+      .rewrite-slide .rewrite-layout {
+        grid-template-columns: 0.82fr 52px 1.08fr;
+      }
     }
 
     .metrics-grid {
@@ -1664,7 +1740,10 @@
     }
 
     .final-content h2 {
-      font-size: 3.75rem;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      font-size: 3.55rem;
       line-height: 1.1;
       white-space: nowrap;
     }
@@ -1892,6 +1971,10 @@
       .rewrite-bridge {
         display: none;
       }
+
+      .final-content h2 {
+        font-size: 2.8rem;
+      }
     }
 
     @media (max-width: 760px) {
@@ -1923,6 +2006,10 @@
       h1 { font-size: 2.45rem; }
       h2 { font-size: 2rem; }
 
+      .final-content h2 {
+        font-size: 1.75rem;
+      }
+
       .stat-row,
       .loop-diagram,
       .dimensions,
@@ -1949,6 +2036,24 @@
       .nav,
       .dots {
         display: none;
+      }
+    }
+
+    @media (max-width: 900px) and (min-width: 761px) {
+      .final-content h2 {
+        font-size: 2.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .final-content h2 {
+        font-size: 1.24rem;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .final-content h2 {
+        font-size: 1rem;
       }
     }
 
@@ -2332,7 +2437,7 @@
         </div>
       </section>
 
-      <section class="slide two-row" data-title="流程重构">
+      <section class="slide two-row rewrite-slide" data-title="流程重构">
         <div class="slide-inner two-row">
           <div class="slide-title">
             <p class="kicker">改的不是界面，是流程</p>
@@ -2509,7 +2614,7 @@
             <div class="kicker">范式改变</div>
           </div>
           <div class="final-content">
-            <h2 class="gradient-text">这不是效率提升，这是范式改变</h2>
+            <h2 class="gradient-text">这不仅仅是效率提升，这是范式改变</h2>
             <div class="final-points">
               <div>AI 能把业务语言转化为系统能力。</div>
               <div>飞书妙搭能把应用接入真实办公生态。</div>
