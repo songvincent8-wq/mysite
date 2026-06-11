@@ -1,0 +1,6 @@
+# Bilibili 已托管视频，本地大文件不入仓库
+assets/demo-upload-flow.mp4
+
+# 系统文件
+Thumbs.db
+desktop.ini

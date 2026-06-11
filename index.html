@@ -1,0 +1,2625 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>滨化集团培训管理系统竞赛演示</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg-0: #020815;
+      --bg-1: #06172d;
+      --bg-2: #0b2748;
+      --line: rgba(117, 194, 255, 0.22);
+      --line-strong: rgba(94, 189, 255, 0.52);
+      --text: #f4f8ff;
+      --muted: #aab8ca;
+      --soft: #dbe8f8;
+      --cyan: #38caff;
+      --blue: #3f7dff;
+      --green: #22d68f;
+      --amber: #f0b84a;
+      --red: #ff6d6d;
+      --panel: rgba(9, 28, 54, 0.78);
+      --panel-2: rgba(13, 41, 76, 0.62);
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.36);
+      --radius: 8px;
+      --slide-pad-x: 6vw;
+      --slide-pad-y: 5vh;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--bg-0);
+      color: var(--text);
+      font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", Arial, sans-serif;
+    }
+
+    body::before {
+      position: fixed;
+      inset: 0;
+      content: "";
+      pointer-events: none;
+      background:
+        linear-gradient(112deg, rgba(11, 35, 72, 0.95), rgba(2, 9, 24, 0.95) 48%, rgba(4, 20, 40, 0.98)),
+        linear-gradient(rgba(85, 172, 255, 0.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(85, 172, 255, 0.05) 1px, transparent 1px);
+      background-size: auto, 42px 42px, 42px 42px;
+    }
+
+    body::after {
+      position: fixed;
+      inset: 0;
+      content: "";
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.44), transparent 15%, transparent 82%, rgba(0, 0, 0, 0.38)),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.28), transparent 24%, transparent 76%, rgba(0, 0, 0, 0.36));
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .deck {
+      position: relative;
+      z-index: 1;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .track {
+      display: flex;
+      height: 100%;
+      transition: transform 520ms cubic-bezier(.2, .8, .2, 1);
+      will-change: transform;
+    }
+
+    .slide {
+      position: relative;
+      flex: 0 0 100vw;
+      width: 100vw;
+      height: 100vh;
+      padding: var(--slide-pad-y) var(--slide-pad-x) 8vh;
+      overflow: hidden;
+    }
+
+    .slide::before {
+      position: absolute;
+      inset: 0;
+      content: "";
+      pointer-events: none;
+      background:
+        linear-gradient(120deg, transparent 0 56%, rgba(56, 202, 255, 0.055) 56% 56.2%, transparent 56.2%),
+        linear-gradient(180deg, rgba(28, 87, 150, 0.08), transparent 34%);
+    }
+
+    .slide-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 28px;
+      width: min(1580px, 100%);
+      height: 100%;
+      margin: 0 auto;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      min-height: 52px;
+    }
+
+    .logos {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      display: grid;
+      place-items: center;
+      height: 46px;
+      min-width: 116px;
+      padding: 7px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
+    }
+
+    .brand-logo img {
+      max-width: 100%;
+      max-height: 34px;
+      object-fit: contain;
+    }
+
+    .brand-logo.feishu {
+      width: 118px;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: #b8dfff;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .kicker::before {
+      width: 26px;
+      height: 2px;
+      content: "";
+      background: linear-gradient(90deg, var(--cyan), transparent);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 780px;
+      font-size: 4.35rem;
+      line-height: 1.05;
+      font-weight: 900;
+    }
+
+    h2 {
+      font-size: 3.05rem;
+      line-height: 1.16;
+      font-weight: 900;
+      padding-bottom: 0.04em;
+    }
+
+    h3 {
+      font-size: 1.28rem;
+      line-height: 1.3;
+      font-weight: 850;
+    }
+
+    .gradient-text {
+      color: transparent;
+      background: linear-gradient(92deg, #ffffff 4%, #bfeaff 44%, #4fb8ff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .subhead {
+      max-width: 760px;
+      color: var(--soft);
+      font-size: 1.25rem;
+      line-height: 1.75;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .headline-block {
+      display: grid;
+      align-content: start;
+      gap: 14px;
+    }
+
+    .hero-layout {
+      grid-template-rows: auto 1fr;
+    }
+
+    .hero-main {
+      display: grid;
+      grid-template-columns: 0.86fr 1.14fr;
+      align-items: center;
+      gap: 46px;
+      min-height: 0;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      width: min(720px, 100%);
+      margin-top: 18px;
+    }
+
+    .stat {
+      position: relative;
+      min-height: 112px;
+      padding: 18px 18px 16px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(13, 42, 80, 0.86), rgba(8, 23, 46, 0.78));
+    }
+
+    .stat::before,
+    .glass::before,
+    .evidence-card::before {
+      position: absolute;
+      inset: 0;
+      content: "";
+      pointer-events: none;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.13), transparent 42%);
+      opacity: 0.22;
+    }
+
+    .stat strong {
+      display: block;
+      color: #ffffff;
+      font-size: 3rem;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .product-frame {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(11, 34, 67, 0.78), rgba(4, 14, 31, 0.96));
+      box-shadow: var(--shadow);
+    }
+
+    .product-frame::after {
+      position: absolute;
+      inset: 0;
+      content: "";
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, transparent, rgba(2, 8, 21, 0.16)),
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 5px);
+      mix-blend-mode: multiply;
+    }
+
+    .product-frame img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-shot {
+      height: min(66vh, 680px);
+      transform: perspective(1400px) rotateY(-7deg) rotateX(2deg);
+      transform-origin: center;
+    }
+
+    .callout {
+      position: absolute;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      padding: 7px 12px;
+      border: 1px solid rgba(82, 208, 255, 0.55);
+      border-radius: 999px;
+      background: rgba(3, 15, 32, 0.82);
+      color: #eaf8ff;
+      font-size: 0.9rem;
+      font-weight: 750;
+      box-shadow: 0 10px 32px rgba(20, 166, 255, 0.18);
+      white-space: nowrap;
+    }
+
+    .callout::before {
+      width: 8px;
+      height: 8px;
+      content: "";
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 12px rgba(34, 214, 143, 0.75);
+    }
+
+    .impact-line {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: min(760px, 100%);
+      margin-top: 20px;
+      color: #e9f7ff;
+      font-size: 1.13rem;
+      line-height: 1.55;
+      font-weight: 700;
+    }
+
+    .impact-line::before {
+      flex: 0 0 3px;
+      align-self: stretch;
+      content: "";
+      background: linear-gradient(var(--cyan), var(--green));
+      border-radius: 4px;
+    }
+
+    .two-row {
+      grid-template-rows: auto 1fr;
+    }
+
+    .slide-title {
+      display: grid;
+      gap: 10px;
+      max-width: 1180px;
+    }
+
+    .slide-title p {
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.62;
+    }
+
+    .pain-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 32px;
+      min-height: 0;
+      align-items: stretch;
+    }
+
+    .workflow-mess {
+      position: relative;
+      min-height: 460px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(160deg, rgba(20, 37, 60, 0.92), rgba(6, 18, 39, 0.92)),
+        repeating-linear-gradient(-12deg, transparent 0 26px, rgba(255, 255, 255, 0.04) 26px 27px);
+      box-shadow: var(--shadow);
+    }
+
+    .mess-item {
+      position: absolute;
+      display: grid;
+      gap: 8px;
+      width: 190px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      background: rgba(245, 248, 255, 0.94);
+      color: #0b1730;
+      box-shadow: 0 18px 34px rgba(0, 0, 0, 0.25);
+    }
+
+    .mess-item b {
+      font-size: 1.1rem;
+    }
+
+    .mess-item small {
+      color: #58708d;
+      line-height: 1.4;
+    }
+
+    .mess-item.excel { left: 7%; top: 8%; transform: rotate(-7deg); }
+    .mess-item.chat { right: 7%; top: 16%; transform: rotate(6deg); }
+    .mess-item.folder { left: 18%; bottom: 18%; transform: rotate(5deg); }
+    .mess-item.ppt { right: 14%; bottom: 10%; transform: rotate(-5deg); }
+
+    .mess-line {
+      position: absolute;
+      height: 2px;
+      transform-origin: left center;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.18), rgba(255, 109, 109, 0.72));
+    }
+
+    .pain-cards {
+      display: grid;
+      grid-template-rows: repeat(3, 1fr);
+      gap: 16px;
+      min-height: 0;
+    }
+
+    .glass,
+    .evidence-card,
+    .metric-card,
+    .method-step,
+    .scenario-token {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);
+    }
+
+    .pain-card {
+      display: grid;
+      grid-template-columns: 58px 1fr;
+      gap: 16px;
+      align-items: start;
+      padding: 22px;
+    }
+
+    .icon-box {
+      display: grid;
+      place-items: center;
+      width: 54px;
+      height: 54px;
+      border: 1px solid rgba(79, 184, 255, 0.45);
+      border-radius: var(--radius);
+      background: rgba(30, 111, 206, 0.22);
+      color: #aeeaff;
+      font-size: 1.75rem;
+      font-weight: 900;
+    }
+
+    .pain-card p {
+      margin-top: 8px;
+      color: var(--muted);
+      line-height: 1.62;
+    }
+
+    .bottom-proof {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      padding: 16px 20px;
+      border: 1px solid rgba(56, 202, 255, 0.32);
+      border-radius: var(--radius);
+      background: rgba(10, 39, 75, 0.58);
+      color: #e7f7ff;
+      font-size: 1.12rem;
+      font-weight: 800;
+    }
+
+    .loop-layout {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 30px;
+      min-height: 0;
+      align-items: stretch;
+    }
+
+    .loop-diagram {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      min-height: 0;
+    }
+
+    .loop-diagram::before {
+      position: absolute;
+      inset: 14% 16%;
+      content: "";
+      border: 2px solid rgba(56, 202, 255, 0.36);
+      border-radius: 50%;
+      animation: pulseLine 4s ease-in-out infinite;
+    }
+
+    @keyframes pulseLine {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.95; }
+    }
+
+    .loop-node {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 12px;
+      padding: 20px;
+      min-height: 205px;
+    }
+
+    .loop-node img {
+      width: 100%;
+      height: 112px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      filter: saturate(1.04) contrast(1.02);
+    }
+
+    .node-index {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      color: white;
+      font-weight: 900;
+    }
+
+    .proof-list {
+      display: grid;
+      gap: 16px;
+      align-content: center;
+    }
+
+    .proof-item {
+      padding: 19px 20px;
+      border-left: 3px solid var(--cyan);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      background: rgba(11, 33, 64, 0.72);
+      color: var(--soft);
+      line-height: 1.58;
+    }
+
+    .matrix-layout {
+      display: grid;
+      grid-template-columns: 1fr 360px 1fr;
+      gap: 20px;
+      align-items: center;
+      min-height: 0;
+    }
+
+    .matrix-col {
+      display: grid;
+      gap: 18px;
+    }
+
+    .capability-card {
+      min-height: 176px;
+      padding: 22px;
+    }
+
+    .capability-card b {
+      display: inline-flex;
+      margin-bottom: 12px;
+      color: #bfeeff;
+      font-size: 1.24rem;
+    }
+
+    .capability-card p {
+      color: var(--muted);
+      line-height: 1.56;
+    }
+
+    .capability-card strong {
+      display: block;
+      margin-top: 14px;
+      color: var(--green);
+      font-size: 1rem;
+    }
+
+    .ecosystem-core {
+      display: grid;
+      place-items: center;
+      gap: 18px;
+      min-height: 390px;
+      padding: 26px;
+      border: 1px solid rgba(56, 202, 255, 0.42);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+        rgba(6, 22, 45, 0.74);
+      text-align: center;
+    }
+
+    .ecosystem-core img {
+      width: min(260px, 92%);
+      padding: 14px;
+      border-radius: var(--radius);
+      background: #ffffff;
+    }
+
+    .ecosystem-core strong {
+      color: #f2fbff;
+      font-size: 1.55rem;
+      line-height: 1.3;
+    }
+
+    .showcase-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.32fr) minmax(300px, 0.68fr);
+      gap: 22px;
+      min-height: 0;
+    }
+
+    .screenshot-card {
+      position: relative;
+      min-height: 0;
+      padding: 13px;
+      border: 1px solid rgba(91, 192, 255, 0.32);
+      border-radius: var(--radius);
+      background: rgba(4, 18, 39, 0.9);
+      box-shadow: var(--shadow);
+    }
+
+    .screenshot-card img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      object-fit: contain;
+      background: #ffffff;
+      border-radius: 6px;
+      cursor: zoom-in;
+    }
+
+    .video-card {
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+
+    .demo-video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      object-fit: contain;
+      background: #050b12;
+      border-radius: 6px;
+    }
+
+    .video-card .tag-stack {
+      pointer-events: none;
+    }
+
+    .video-caption {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      background: rgba(2, 11, 25, 0.82);
+      color: #e9f8ff;
+    }
+
+    .video-caption b {
+      font-size: 1rem;
+    }
+
+    .video-caption span {
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+
+    .shot-title {
+      position: absolute;
+      left: 24px;
+      bottom: 22px;
+      z-index: 3;
+      padding: 10px 13px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      background: rgba(2, 11, 25, 0.82);
+      color: #e9f8ff;
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .main-shot {
+      min-height: 560px;
+    }
+
+    .side-shots {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 22px;
+      min-height: 0;
+    }
+
+    .tag-stack {
+      position: absolute;
+      z-index: 4;
+      top: 24px;
+      left: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      max-width: calc(100% - 48px);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 6px 10px;
+      border: 1px solid rgba(56, 202, 255, 0.45);
+      border-radius: 999px;
+      background: rgba(3, 15, 32, 0.74);
+      color: #daf5ff;
+      font-size: 0.86rem;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .ai-layout {
+      display: grid;
+      grid-template-columns: 0.95fr 170px 1fr;
+      gap: 22px;
+      align-items: stretch;
+      min-height: 0;
+    }
+
+    .bubble-stack,
+    .cap-stack {
+      display: grid;
+      gap: 13px;
+      align-content: center;
+    }
+
+    .bubble {
+      padding: 16px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.92);
+      color: #07152d;
+      font-size: 1.05rem;
+      line-height: 1.42;
+      font-weight: 750;
+    }
+
+    .cap-pill {
+      display: grid;
+      gap: 6px;
+      padding: 16px 18px;
+      border: 1px solid rgba(56, 202, 255, 0.34);
+      border-radius: var(--radius);
+      background: rgba(8, 31, 63, 0.78);
+    }
+
+    .cap-pill b {
+      color: #dff7ff;
+    }
+
+    .cap-pill span {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .ai-spine {
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 16px;
+    }
+
+    .ai-chip {
+      display: grid;
+      place-items: center;
+      width: 118px;
+      height: 118px;
+      border: 1px solid rgba(56, 202, 255, 0.56);
+      border-radius: 50%;
+      background:
+        conic-gradient(from 120deg, rgba(56, 202, 255, 0.8), rgba(63, 125, 255, 0.8), rgba(34, 214, 143, 0.72), rgba(56, 202, 255, 0.8));
+      color: white;
+      font-size: 2.2rem;
+      font-weight: 900;
+      box-shadow: 0 0 36px rgba(56, 202, 255, 0.32);
+    }
+
+    .spine-step {
+      width: 2px;
+      height: 44px;
+      background: linear-gradient(var(--cyan), rgba(56, 202, 255, 0.05));
+    }
+
+    .dimensions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .dimension-card {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 20px;
+      padding: 26px;
+      min-height: 530px;
+    }
+
+    .dimension-card h3 {
+      color: #dff8ff;
+      font-size: 1.5rem;
+    }
+
+    .before-after {
+      display: grid;
+      gap: 16px;
+      align-content: center;
+    }
+
+    .ba-row {
+      display: grid;
+      gap: 8px;
+      padding: 15px;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.055);
+    }
+
+    .ba-row small {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .ba-row strong {
+      color: #ffffff;
+      line-height: 1.42;
+    }
+
+    .creator-layout {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 24px;
+      min-height: 0;
+      align-items: stretch;
+    }
+
+    .creator-visual {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 14px;
+      padding: 20px;
+      min-height: 0;
+    }
+
+    .creator-visual h3,
+    .creator-dimension h3 {
+      color: #e7f8ff;
+    }
+
+    .creator-pipeline {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr) 42px minmax(0, 1fr);
+      gap: 10px;
+      align-items: stretch;
+      min-height: 0;
+    }
+
+    .creator-node {
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      padding: 14px;
+      min-height: 260px;
+      border: 1px solid rgba(56, 202, 255, 0.28);
+      border-radius: var(--radius);
+      background: rgba(5, 24, 50, 0.72);
+    }
+
+    .creator-node b {
+      color: #ffffff;
+      font-size: 1.08rem;
+    }
+
+    .creator-node p {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .creator-node img {
+      width: 100%;
+      height: 88px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 6px;
+      background: #ffffff;
+      cursor: zoom-in;
+    }
+
+    .prompt-chip,
+    .output-chip {
+      padding: 8px 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #e6f7ff;
+      line-height: 1.38;
+      font-weight: 760;
+    }
+
+    .prompt-chip {
+      border-left: 3px solid var(--cyan);
+    }
+
+    .output-chip {
+      border-left: 3px solid var(--green);
+    }
+
+    .creator-arrow {
+      display: grid;
+      place-items: center;
+      color: #bfeeff;
+      font-size: 2.2rem;
+      font-weight: 900;
+    }
+
+    .creator-proofline {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .creator-proofline span {
+      padding: 10px;
+      border: 1px solid rgba(34, 214, 143, 0.26);
+      border-radius: var(--radius);
+      background: rgba(11, 65, 67, 0.34);
+      color: #dffdee;
+      line-height: 1.42;
+      font-weight: 760;
+    }
+
+    .creator-board .creator-proofline span {
+      padding: 8px 10px;
+      line-height: 1.25;
+    }
+
+    .creator-dimensions {
+      display: grid;
+      gap: 10px;
+      min-height: 0;
+    }
+
+    .creator-dimension {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(8, 31, 63, 0.78);
+    }
+
+    .creator-dimension p {
+      margin-top: 6px;
+      color: var(--muted);
+      line-height: 1.38;
+    }
+
+    .creator-example {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 10px;
+      align-items: center;
+      margin-top: 8px;
+      font-weight: 800;
+    }
+
+    .creator-example span {
+      padding: 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.07);
+      color: #edfaff;
+      line-height: 1.35;
+    }
+
+    .creator-example i {
+      color: var(--cyan);
+      font-style: normal;
+      font-size: 1.3rem;
+    }
+
+    .creator-board {
+      grid-template-rows: auto 1fr auto;
+      gap: 12px;
+      padding: 18px 20px 16px;
+    }
+
+    .creator-board-head p {
+      margin-top: 6px;
+      max-width: 760px;
+      line-height: 1.38;
+    }
+
+    .creator-main-chain {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr);
+      gap: 12px;
+      align-items: stretch;
+      min-height: 0;
+    }
+
+    .chain-panel {
+      display: grid;
+      gap: 9px;
+      align-content: start;
+      padding: 14px;
+      border: 1px solid rgba(56, 202, 255, 0.28);
+      border-radius: var(--radius);
+      background: rgba(5, 24, 50, 0.74);
+      min-height: 236px;
+    }
+
+    .chain-panel h3 {
+      color: #ffffff;
+      font-size: 1.15rem;
+    }
+
+    .chain-panel small {
+      color: var(--muted);
+      font-weight: 760;
+      letter-spacing: 0;
+    }
+
+    .chain-prompt {
+      padding: 9px 10px;
+      border-left: 4px solid var(--cyan);
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #eafaff;
+      line-height: 1.34;
+      font-weight: 780;
+    }
+
+    .chain-output-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .chain-output {
+      min-height: 64px;
+      padding: 9px 10px;
+      border: 1px solid rgba(34, 214, 143, 0.28);
+      border-radius: 7px;
+      background: rgba(12, 67, 65, 0.38);
+      color: #eafff4;
+      line-height: 1.3;
+      font-weight: 780;
+    }
+
+    .chain-arrow {
+      display: grid;
+      place-items: center;
+      color: #bfeeff;
+      font-size: 2.35rem;
+      font-weight: 900;
+    }
+
+    .creator-card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      min-height: 0;
+    }
+
+    .creator-rich-card {
+      display: grid;
+      gap: 7px;
+      align-content: start;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(8, 31, 63, 0.78);
+      min-height: 0;
+    }
+
+    .creator-rich-card h3 {
+      color: #e7f8ff;
+      font-size: 1.12rem;
+    }
+
+    .creator-rich-card p {
+      color: var(--muted);
+      line-height: 1.34;
+    }
+
+    .creator-rich-card strong {
+      color: #ffffff;
+    }
+
+    .creator-mini-shot {
+      height: 112px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 7px;
+      background: #ffffff;
+    }
+
+    .creator-mini-shot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: zoom-in;
+    }
+
+    .flow-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 26px;
+      min-height: 0;
+      align-items: stretch;
+    }
+
+    .flow-col {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 14px;
+    }
+
+    .flow-col h3 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2px;
+      color: #f4fbff;
+      font-size: 1.35rem;
+    }
+
+    .flow-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .flow-step {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 13px;
+      align-items: center;
+      padding: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: var(--radius);
+      background: rgba(10, 28, 52, 0.78);
+      color: var(--soft);
+      line-height: 1.45;
+    }
+
+    .flow-old .flow-step {
+      filter: grayscale(0.55);
+      opacity: 0.82;
+    }
+
+    .flow-new .flow-step {
+      border-color: rgba(56, 202, 255, 0.36);
+      background: rgba(9, 43, 83, 0.84);
+    }
+
+    .step-no {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-weight: 900;
+    }
+
+    .flow-new .step-no {
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+    }
+
+    .embedded-shot {
+      height: 150px;
+      margin-top: 4px;
+      overflow: hidden;
+      border: 1px solid rgba(56, 202, 255, 0.32);
+      border-radius: var(--radius);
+      background: #ffffff;
+    }
+
+    .embedded-shot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: zoom-in;
+    }
+
+    .rewrite-layout {
+      display: grid;
+      grid-template-columns: 0.86fr 72px 1.14fr;
+      gap: 18px;
+      min-height: 0;
+      align-items: stretch;
+    }
+
+    .legacy-board,
+    .new-board {
+      display: grid;
+      gap: 14px;
+      padding: 22px;
+      min-height: 0;
+    }
+
+    .board-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .board-title span {
+      color: var(--muted);
+      font-size: 0.96rem;
+      font-weight: 760;
+    }
+
+    .legacy-items,
+    .new-flow-list {
+      display: grid;
+      gap: 12px;
+      min-height: 0;
+    }
+
+    .new-board .new-flow-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .legacy-card {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 13px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.055);
+      color: var(--soft);
+      line-height: 1.4;
+    }
+
+    .legacy-card b {
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #d8e2ee;
+      font-size: 0.9rem;
+    }
+
+    .legacy-warning {
+      padding: 13px 14px;
+      border: 1px solid rgba(255, 109, 109, 0.34);
+      border-radius: var(--radius);
+      background: rgba(93, 31, 43, 0.36);
+      color: #ffdfe0;
+      line-height: 1.45;
+      font-weight: 800;
+    }
+
+    .rewrite-bridge {
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 14px;
+      color: #dff8ff;
+      text-align: center;
+    }
+
+    .rewrite-bridge strong {
+      font-size: 2.8rem;
+      line-height: 1;
+      color: var(--cyan);
+    }
+
+    .rewrite-bridge span {
+      writing-mode: vertical-rl;
+      color: var(--muted);
+      font-weight: 850;
+      letter-spacing: 0.06em;
+    }
+
+    .flow-stage {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 11px;
+      border: 1px solid rgba(56, 202, 255, 0.32);
+      border-radius: var(--radius);
+      background: rgba(7, 36, 72, 0.72);
+    }
+
+    .flow-stage b {
+      color: #ffffff;
+      font-size: 1.08rem;
+    }
+
+    .flow-stage p {
+      margin-top: 5px;
+      color: var(--muted);
+      line-height: 1.38;
+    }
+
+    .stage-proof {
+      grid-column: 2;
+      min-height: 54px;
+      padding: 7px 9px;
+      border: 1px solid rgba(34, 214, 143, 0.26);
+      border-radius: 6px;
+      background: rgba(8, 70, 65, 0.34);
+      color: #e0fff1;
+      line-height: 1.32;
+      font-weight: 820;
+    }
+
+    .rewrite-shot-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      min-height: 126px;
+    }
+
+    .rewrite-shot {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(56, 202, 255, 0.32);
+      border-radius: var(--radius);
+      background: #ffffff;
+    }
+
+    .rewrite-shot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: zoom-in;
+    }
+
+    .rewrite-shot span {
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      padding: 6px 9px;
+      border-radius: 6px;
+      background: rgba(3, 15, 32, 0.78);
+      color: #f1fbff;
+      font-weight: 850;
+      font-size: 0.88rem;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      align-content: center;
+    }
+
+    .metric-card {
+      min-height: 184px;
+      padding: 24px;
+    }
+
+    .metric-card strong {
+      display: block;
+      color: #ffffff;
+      font-size: 3.25rem;
+      line-height: 1;
+      font-weight: 950;
+    }
+
+    .metric-card b {
+      display: block;
+      margin-top: 12px;
+      color: #c8f2ff;
+      font-size: 1.16rem;
+    }
+
+    .metric-card span {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      line-height: 1.48;
+    }
+
+    .evidence-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .evidence-card {
+      padding: 16px 18px;
+      color: var(--soft);
+      line-height: 1.45;
+    }
+
+    .data-proof-banner {
+      position: relative;
+      display: grid;
+      align-items: end;
+      min-height: 135px;
+      margin-top: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(56, 202, 255, 0.34);
+      border-radius: var(--radius);
+      background: rgba(3, 14, 31, 0.86);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.2);
+    }
+
+    .data-proof-banner img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      opacity: 0.82;
+    }
+
+    .data-proof-banner::after {
+      position: absolute;
+      inset: 0;
+      content: "";
+      background:
+        linear-gradient(90deg, rgba(2, 8, 21, 0.32), rgba(2, 8, 21, 0.06) 44%, rgba(2, 8, 21, 0.34)),
+        linear-gradient(180deg, rgba(2, 8, 21, 0.18), rgba(2, 8, 21, 0.74));
+      pointer-events: none;
+    }
+
+    .data-proof-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 16px;
+    }
+
+    .data-proof-title {
+      display: grid;
+      gap: 6px;
+    }
+
+    .data-proof-title b {
+      color: #ffffff;
+      font-size: 1.14rem;
+      line-height: 1.2;
+    }
+
+    .data-proof-title span {
+      color: #b9cce2;
+      line-height: 1.32;
+    }
+
+    .data-proof-tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-right: 78px;
+    }
+
+    .data-proof-tags span {
+      padding: 8px 11px;
+      border: 1px solid rgba(56, 202, 255, 0.38);
+      border-radius: 999px;
+      background: rgba(3, 15, 32, 0.78);
+      color: #ecfbff;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .metrics-grid-data {
+      gap: 12px;
+    }
+
+    .metrics-grid-data .metric-card {
+      min-height: 154px;
+      padding: 18px 21px;
+    }
+
+    .metrics-grid-data .metric-card strong {
+      font-size: 3rem;
+    }
+
+    .metrics-grid-data .metric-card b {
+      margin-top: 9px;
+    }
+
+    .metrics-grid-data .metric-card span {
+      margin-top: 8px;
+      line-height: 1.38;
+    }
+
+    .method-layout {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 30px;
+      min-height: 0;
+      align-items: center;
+    }
+
+    .method-quote {
+      display: grid;
+      gap: 22px;
+    }
+
+    .method-quote .large {
+      color: #ffffff;
+      font-size: 2.15rem;
+      line-height: 1.35;
+      font-weight: 900;
+    }
+
+    .method-steps {
+      display: grid;
+      gap: 14px;
+    }
+
+    .method-step {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 16px;
+      align-items: center;
+      min-height: 118px;
+      padding: 18px;
+    }
+
+    .method-step:nth-child(2) { margin-left: 28px; }
+    .method-step:nth-child(3) { margin-left: 56px; }
+    .method-step:nth-child(4) { margin-left: 84px; }
+
+    .method-step p {
+      color: var(--muted);
+      line-height: 1.45;
+      margin-top: 6px;
+    }
+
+    .migration-layout {
+      display: grid;
+      grid-template-columns: 430px 1fr;
+      gap: 34px;
+      min-height: 0;
+      align-items: center;
+    }
+
+    .four-piece {
+      display: grid;
+      gap: 14px;
+      padding: 28px;
+      border: 1px solid rgba(56, 202, 255, 0.42);
+      border-radius: var(--radius);
+      background: rgba(7, 29, 59, 0.82);
+      box-shadow: var(--shadow);
+    }
+
+    .piece {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      align-items: center;
+      padding: 14px;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .piece b {
+      color: #f2fbff;
+    }
+
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .scenario-token {
+      display: grid;
+      place-items: center;
+      min-height: 104px;
+      padding: 16px;
+      color: #ecf9ff;
+      text-align: center;
+      font-size: 1.12rem;
+      font-weight: 850;
+    }
+
+    .platform-notes {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .platform-notes span {
+      padding: 13px;
+      border: 1px solid rgba(34, 214, 143, 0.3);
+      border-radius: var(--radius);
+      background: rgba(13, 67, 64, 0.4);
+      color: #d8fff0;
+      line-height: 1.42;
+    }
+
+    .final-slide {
+      padding: 0;
+    }
+
+    .final-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(90deg, rgba(2, 8, 21, 0.96), rgba(2, 8, 21, 0.82), rgba(2, 8, 21, 0.96)),
+        url("assets/dashboard-main.png");
+      background-position: center;
+      background-size: cover;
+      filter: saturate(0.65) brightness(0.82);
+    }
+
+    .final-slide .slide-inner {
+      height: 100%;
+      padding: var(--slide-pad-y) var(--slide-pad-x) 8vh;
+    }
+
+    .final-content {
+      display: grid;
+      align-content: center;
+      gap: 26px;
+      width: min(1280px, 100%);
+      height: 100%;
+    }
+
+    .final-content h2 {
+      font-size: 3.75rem;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
+
+    .final-points {
+      display: grid;
+      gap: 12px;
+      max-width: 850px;
+    }
+
+    .final-points div {
+      padding: 15px 18px;
+      border-left: 3px solid var(--cyan);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      background: rgba(4, 18, 38, 0.68);
+      color: var(--soft);
+      font-size: 1.08rem;
+      line-height: 1.45;
+    }
+
+    .gold-line {
+      max-width: 980px;
+      color: #ffe7a6;
+      font-size: 2.05rem;
+      line-height: 1.35;
+      font-weight: 900;
+    }
+
+    .nav {
+      position: fixed;
+      z-index: 8;
+      right: 28px;
+      bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-btn {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius);
+      background: rgba(5, 20, 42, 0.86);
+      color: #eaf8ff;
+      cursor: pointer;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--line-strong);
+      background: rgba(13, 47, 89, 0.92);
+    }
+
+    .counter {
+      min-width: 78px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .progress {
+      position: fixed;
+      z-index: 8;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .progress span {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--cyan), var(--green));
+      transition: width 420ms ease;
+    }
+
+    .dots {
+      position: fixed;
+      z-index: 8;
+      left: 50%;
+      bottom: 25px;
+      display: flex;
+      gap: 7px;
+      transform: translateX(-50%);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.26);
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .dot.active {
+      width: 28px;
+      border-radius: 999px;
+      background: var(--cyan);
+    }
+
+    .modal {
+      position: fixed;
+      z-index: 20;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      background: rgba(0, 4, 12, 0.84);
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .modal figure {
+      display: grid;
+      gap: 12px;
+      width: min(1480px, 96vw);
+      margin: 0;
+    }
+
+    .modal img {
+      max-width: 100%;
+      max-height: 82vh;
+      object-fit: contain;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: var(--shadow);
+    }
+
+    .modal figcaption {
+      color: #e8f8ff;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 22px;
+      right: 22px;
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: var(--radius);
+      background: rgba(8, 24, 48, 0.86);
+      color: #fff;
+      cursor: pointer;
+    }
+
+    @media (max-width: 1200px) {
+      :root {
+        --slide-pad-x: 4vw;
+        --slide-pad-y: 4vh;
+      }
+
+      h1 { font-size: 3.55rem; }
+      h2 { font-size: 2.55rem; }
+      .hero-main,
+      .pain-layout,
+      .loop-layout,
+      .method-layout,
+      .migration-layout,
+      .creator-layout,
+      .rewrite-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-shot {
+        height: 40vh;
+        transform: none;
+      }
+
+      .matrix-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .ecosystem-core {
+        min-height: 230px;
+      }
+
+      .showcase-layout,
+      .ai-layout,
+      .flow-layout,
+      .creator-pipeline,
+      .creator-main-chain {
+        grid-template-columns: 1fr;
+      }
+
+      .side-shots {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: none;
+      }
+
+      .main-shot {
+        min-height: 360px;
+      }
+
+      .dimensions,
+      .metrics-grid,
+      .scenario-grid,
+      .platform-notes {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .dimension-card {
+        min-height: 330px;
+      }
+
+      .ai-spine {
+        display: none;
+      }
+
+      .creator-arrow,
+      .chain-arrow,
+      .rewrite-bridge {
+        display: none;
+      }
+    }
+
+    @media (max-width: 760px) {
+      html,
+      body {
+        overflow: auto;
+      }
+
+      .deck {
+        height: auto;
+        overflow: visible;
+      }
+
+      .track {
+        display: block;
+        transform: none !important;
+      }
+
+      .slide {
+        min-height: 100vh;
+        height: auto;
+        padding: 34px 18px 70px;
+      }
+
+      .slide-inner {
+        height: auto;
+      }
+
+      h1 { font-size: 2.45rem; }
+      h2 { font-size: 2rem; }
+
+      .stat-row,
+      .loop-diagram,
+      .dimensions,
+      .creator-proofline,
+      .creator-main-chain,
+      .creator-card-grid,
+      .rewrite-shot-row,
+      .metrics-grid,
+      .evidence-strip,
+      .scenario-grid,
+      .platform-notes,
+      .side-shots {
+        grid-template-columns: 1fr;
+      }
+
+      .showcase-layout {
+        display: grid;
+      }
+
+      .main-shot {
+        min-height: 280px;
+      }
+
+      .nav,
+      .dots {
+        display: none;
+      }
+    }
+
+    @media (min-width: 761px) {
+      html {
+        font-size: 20px;
+      }
+
+      :root {
+        --slide-pad-x: 5.2vw;
+        --slide-pad-y: 4.4vh;
+      }
+
+      h1 {
+        font-size: 4.05rem;
+      }
+
+      h2 {
+        font-size: 2.82rem;
+      }
+
+      .slide-inner {
+        gap: 22px;
+      }
+
+      .slide-title p,
+      .subhead,
+      .proof-item,
+      .impact-line,
+      .bottom-proof,
+      .metric-card span,
+      .evidence-card,
+      .method-step p,
+      .platform-notes span,
+      .final-points div {
+        font-size: 1.18rem;
+      }
+
+      .tag,
+      .callout,
+      .shot-title,
+      .kicker,
+      .counter {
+        font-size: 1rem;
+      }
+
+      .flow-step,
+      .bubble,
+      .cap-pill,
+      .capability-card p,
+      .pain-card p,
+      .loop-node p,
+      .creator-node p,
+      .creator-dimension p,
+      .chain-prompt,
+      .chain-output,
+      .creator-rich-card p,
+      .flow-stage p,
+      .legacy-card,
+      .legacy-warning,
+      .stage-proof {
+        font-size: 1.08rem;
+      }
+
+      .metric-card strong {
+        font-size: 3.35rem;
+      }
+
+      .metric-card b,
+      .flow-col h3,
+      .method-step h3,
+      .scenario-token,
+      .creator-node b,
+      .chain-panel h3,
+      .creator-rich-card h3,
+      .flow-stage b {
+        font-size: 1.3rem;
+      }
+
+      .metrics-grid {
+        gap: 15px;
+      }
+
+      .metric-card {
+        min-height: 176px;
+        padding: 21px;
+      }
+
+      .evidence-strip {
+        gap: 12px;
+      }
+
+      .method-step {
+        min-height: 126px;
+      }
+
+      .chain-panel h3,
+      .creator-rich-card h3 {
+        font-size: 1.16rem;
+      }
+
+      .chain-prompt,
+      .chain-output,
+      .creator-rich-card p,
+      .creator-board .creator-proofline span {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" aria-label="滨化集团培训管理系统竞赛演示">
+    <div class="track" id="track">
+      <section class="slide hero-layout" data-title="封面">
+        <div class="slide-inner hero-layout">
+          <div class="brand-row">
+            <div class="logos">
+              <div class="brand-logo"><img src="assets/beifar-logo.png" alt="滨化集团" /></div>
+              <div class="brand-logo feishu"><img src="assets/feishu-logo-crop.png" alt="飞书" /></div>
+            </div>
+            <div class="kicker">AI效率先锋大赛</div>
+          </div>
+          <div class="hero-main">
+            <div>
+              <p class="kicker">基于飞书妙搭</p>
+              <h1 class="gradient-text">用 AI 搭建企业培训管理闭环</h1>
+              <p class="subhead">把滨化集团真实培训管理场景，从 Excel 和微信群搬进可追踪、可归档、可复盘的企业管理闭环。</p>
+              <div class="stat-row" aria-label="关键数字">
+                <div class="stat"><strong>13</strong><span>个部门统一纳入</span></div>
+                <div class="stat"><strong>54</strong><span>项年度培训计划</span></div>
+                <div class="stat"><strong>0</strong><span>代码完成应用构建</span></div>
+              </div>
+              <div class="impact-line">一个人、零代码、四天，让业务人员直接创造可运行的企业应用。</div>
+            </div>
+            <div class="product-frame hero-shot">
+              <img src="assets/dashboard-main.png" alt="培训计划看板页面局部" data-zoom data-full="assets/dashboard-full.png" data-caption="看板页面.png：培训计划看板总览" />
+              <span class="callout" style="top: 11%; left: 9%;">实时完成率</span>
+              <span class="callout" style="right: 7%; top: 36%;">部门分布</span>
+              <span class="callout" style="left: 14%; bottom: 12%;">即将开展提醒</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide two-row" data-title="三重困境">
+        <div class="slide-inner two-row">
+          <div class="slide-title">
+            <p class="kicker">问题不是表格不好看</p>
+            <h2 class="gradient-text">培训管理的低效，在流程断点里</h2>
+          </div>
+          <div class="pain-layout">
+            <div class="workflow-mess" aria-label="传统流程拼贴">
+              <div class="mess-line" style="left: 23%; top: 27%; width: 46%; transform: rotate(13deg);"></div>
+              <div class="mess-line" style="left: 48%; top: 39%; width: 35%; transform: rotate(67deg);"></div>
+              <div class="mess-line" style="left: 23%; bottom: 31%; width: 53%; transform: rotate(-14deg);"></div>
+              <div class="mess-item excel"><b>Excel</b><small>计划版本散落，各部门各自下载</small></div>
+              <div class="mess-item chat"><b>微信群</b><small>照片和签到表在聊天中漂流</small></div>
+              <div class="mess-item folder"><b>文件夹</b><small>材料归档依赖人工整理</small></div>
+              <div class="mess-item ppt"><b>PPT 汇报</b><small>季度统计反复截图拼装</small></div>
+            </div>
+            <div class="pain-cards">
+              <div class="glass pain-card">
+                <div class="icon-box">X</div>
+                <div><h3>计划是一张“死”Excel</h3><p>版本混乱，更新不透明，发布后无法持续追踪。</p></div>
+              </div>
+              <div class="glass pain-card">
+                <div class="icon-box">W</div>
+                <div><h3>材料在微信群“漂流”</h3><p>照片、签到表分散传递，约 20% 证明材料遗失或无法完整归档。</p></div>
+              </div>
+              <div class="glass pain-card">
+                <div class="icon-box">Σ</div>
+                <div><h3>数据靠人工“现拼”</h3><p>季度汇报需要反复筛选、求和、制图和截图。</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="bottom-proof">
+            <span>核心问题：信息散落四处，进度全靠追问，统计纯靠手工。</span>
+            <span class="muted">传统方式缺少管理闭环</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide two-row" data-title="解决方案">
+        <div class="slide-inner two-row">
+          <div class="slide-title">
+            <p class="kicker">从零散协作到业务闭环</p>
+            <h2 class="gradient-text">四个环节，驱动培训管理持续运转</h2>
+          </div>
+          <div class="loop-layout">
+            <div class="loop-diagram">
+              <div class="glass loop-node">
+                <div><span class="node-index">1</span></div>
+                <h3>计划发布</h3>
+                <p class="muted">管理员在线发布，所有部门看到唯一版本。</p>
+                <img src="assets/dashboard-kpi.png" alt="计划发布数据总览" data-zoom data-full="assets/dashboard-full.png" data-caption="看板页面.png：年度计划与完成率" />
+              </div>
+              <div class="glass loop-node">
+                <div><span class="node-index">2</span></div>
+                <h3>执行跟踪</h3>
+                <p class="muted">部门负责人查看本部门任务并推进状态。</p>
+                <img src="assets/department-table.png" alt="部门完成情况页面" data-zoom data-full="assets/department-full.png" data-caption="本部门培训计划完成页面.png：部门负责人视角" />
+              </div>
+              <div class="glass loop-node">
+                <div><span class="node-index">3</span></div>
+                <h3>材料归档</h3>
+                <p class="muted">现场手机上传签到表和照片，进入云空间。</p>
+                <img src="assets/upload-panel.png" alt="材料上传页面" data-zoom data-full="assets/upload-full.png" data-caption="材料上传页面.png：移动端材料归档" />
+              </div>
+              <div class="glass loop-node">
+                <div><span class="node-index">4</span></div>
+                <h3>数据复盘</h3>
+                <p class="muted">看板实时汇总完成率、部门进度和材料状态。</p>
+                <img src="assets/dashboard-charts.png" alt="看板图表区域" data-zoom data-full="assets/dashboard-full.png" data-caption="看板页面.png：季度与部门分布" />
+              </div>
+            </div>
+            <div class="proof-list">
+              <div class="proof-item"><b>不是展示型看板。</b> 每一环都产生数据，并驱动下一环继续推进。</div>
+              <div class="proof-item"><b>不是外部系统。</b> 计划、材料、权限和移动端操作都落在飞书办公流里。</div>
+              <div class="proof-item"><b>不是一次性汇报。</b> 从发布、执行、归档到复盘，形成可持续运转的管理机制。</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide two-row" data-title="飞书生态">
+        <div class="slide-inner two-row">
+          <div class="slide-title">
+            <p class="kicker">为什么是飞书妙搭</p>
+            <h2 class="gradient-text">应用天然长在飞书办公流里</h2>
+          </div>
+          <div class="matrix-layout">
+            <div class="matrix-col">
+              <div class="glass capability-card"><b>组织架构</b><p>复用通讯录和部门关系，13 个部门不再维护第二套账号。</p><strong>零用户维护成本</strong></div>
+              <div class="glass capability-card"><b>权限体系</b><p>管理员增删改，部门人员只查看和上传，角色边界清晰。</p><strong>安全合规</strong></div>
+            </div>
+            <div class="ecosystem-core">
+              <img src="assets/feishu-logo-crop.png" alt="飞书 Logo" />
+              <strong>组织、权限、文件、多端能力一体接入</strong>
+              <p class="muted">妙搭不是单独生成网页，而是让业务应用进入企业真实办公生态。</p>
+            </div>
+            <div class="matrix-col">
+              <div class="glass capability-card"><b>云空间</b><p>培训证明材料统一归档，避免过期、丢失和不可追溯。</p><strong>可追溯、可审计</strong></div>
+              <div class="glass capability-card"><b>多端能力</b><p>PC 端管理配置，移动端现场上传材料，不再回到电脑二次处理。</p><strong>现场即可闭环</strong></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide two-row" data-title="实机展示">
+        <div class="slide-inner two-row">
+          <div class="slide-title">
+            <p class="kicker">系统已经跑起来</p>
+            <h2 class="gradient-text">真实界面，证明真实业务闭环</h2>
+          </div>
+          <div class="showcase-layout">
+            <div class="screenshot-card main-shot video-card">
+              <div class="tag-stack">
+                <span class="tag">材料上传</span>
+                <span class="tag">计划完成</span>
+                <span class="tag">看板联动</span>
+              </div>
+              <iframe class="demo-video" src="//player.bilibili.com/player.html?isOutside=true&aid=116729225152380&bvid=BV1YvEY6AEox&cid=39026558836&p=1" scrolling="no" frameborder="0" allowfullscreen="true" aria-label="材料上传到培训计划完成和看板联动的实机演示视频"></iframe>
+              <div class="video-caption">
+                <b>材料上传闭环演示</b>
+                <span>上传完成后，计划状态与看板数据同步变化</span>
+              </div>
+            </div>
+            <div class="side-shots">
+              <div class="screenshot-card">
+                <div class="tag-stack"><span class="tag">部门负责人视角</span><span class="tag">按钮按权限显隐</span></div>
+                <img src="assets/department-table.png" alt="部门负责人视角" data-zoom data-full="assets/department-full.png" data-caption="本部门培训计划完成页面.png：本部门完成情况" />
+                <div class="shot-title">本部门完成情况</div>
+              </div>
+              <div class="screenshot-card">
+                <div class="tag-stack"><span class="tag">手机上传</span><span class="tag">材料秒级归档</span></div>
+                <img src="assets/upload-panel.png" alt="材料上传入口" data-zoom data-full="assets/upload-full.png" data-caption="材料上传页面.png：培训证明材料上传" />
+                <div class="shot-title">材料上传页面</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide two-row" data-title="AI 迭代">
+        <div class="slide-inner two-row">
+          <div class="slide-title">
+            <p class="kicker">AI 的作用不是一次性生成</p>
+            <h2 class="gradient-text">业务语言，持续沉淀成系统能力</h2>
+          </div>
+          <div class="ai-layout">
+            <div class="bubble-stack" aria-label="自然语言需求">
+              <div class="bubble">“我要两种角色，管理员和部门人员。”</div>
+              <div class="bubble">“两个人可能同时改数据，要防止覆盖。”</div>
+              <div class="bubble">“数据要一起清干净，别留下孤儿记录。”</div>
+              <div class="bubble">“不要让人传错了再删掉重传。”</div>
+              <div class="bubble">“部门人员不该看到的按钮直接隐藏。”</div>
+            </div>
+            <div class="ai-spine" aria-hidden="true">
+              <div class="spine-step"></div>
+              <div class="ai-chip">AI</div>
+              <div class="spine-step"></div>
+            </div>
+            <div class="cap-stack" aria-label="系统能力输出">
+              <div class="cap-pill"><b>角色权限模型</b><span>管理员与部门人员分角色访问。</span></div>
+              <div class="cap-pill"><b>乐观锁机制</b><span>防止多人同时修改导致覆盖。</span></div>
+              <div class="cap-pill"><b>级联删除</b><span>保证计划、记录、材料关系一致。</span></div>
+              <div class="cap-pill"><b>上传前校验</b><span>提前拦截错误文件，降低返工。</span></div>
+              <div class="cap-pill"><b>按钮显隐</b><span>不该操作的入口直接不出现。</span></div>
+            </div>
+          </div>
+          <div class="bottom-proof">
+            <span>AI 不是帮业务人员“写代码”，而是在理解并固化业务规则。</span>
+            <span class="muted">骨架 → 规则 → 数据 → 工程 → 体验</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide two-row" data-title="AI 赋能">
+        <div class="slide-inner two-row">
+          <div class="slide-title">
+            <p class="kicker">AI 赋能的三个维度</p>
+            <h2 class="gradient-text">懂业务的人直接成为应用创造者</h2>
+          </div>
+          <div class="creator-layout">
+            <div class="glass creator-visual creator-board">
+              <div class="creator-board-head">
+                <h3>业务语言直接进入系统设计</h3>
+                <p class="muted">从“谁能做、哪里会错、怎样算完成”出发，AI 把业务经验拆成页面、数据和工程约束。</p>
+              </div>
+              <div class="creator-main-chain">
+                <div class="chain-panel">
+                  <h3>业务专家说清场景</h3>
+                  <small>来自培训管理现场的原话</small>
+                  <div class="chain-prompt">“部门人员维护本部门，集团管理员看全局。”</div>
+                  <div class="chain-prompt">“多人同时修改时，后保存不能覆盖前一个人。”</div>
+                  <div class="chain-prompt">“材料上传先校验，错误文件提前拦截。”</div>
+                </div>
+                <div class="chain-arrow">→</div>
+                <div class="chain-panel">
+                  <h3>AI 生成系统能力</h3>
+                  <small>把经验固化为可执行规则</small>
+                  <div class="chain-output-grid">
+                    <div class="chain-output">角色权限与按钮显隐</div>
+                    <div class="chain-output">计划、记录、材料关联关系</div>
+                    <div class="chain-output">乐观锁与并发保护</div>
+                    <div class="chain-output">上传校验与异常提示</div>
+                  </div>
+                </div>
+              </div>
+              <div class="creator-proofline">
+                <span>减少转译链路</span>
+                <span>填平技术门槛</span>
+                <span>生成企业级体验</span>
+              </div>
+            </div>
+            <div class="creator-card-grid">
+              <div class="creator-rich-card">
+                <h3>替代翻译损耗</h3>
+                <p><strong>业务原话</strong> 直接变成页面流程、字段结构和操作限制，减少“业务说不清、技术猜场景”的损耗。</p>
+                <div class="creator-example"><span>培训计划</span><i>→</i><span>字段与责任</span></div>
+              </div>
+              <div class="creator-rich-card">
+                <h3>补齐技术短板</h3>
+                <p>不用先掌握数据库事务、前端状态、接口鉴权，也能提出企业级规则；AI 负责转成工程实现。</p>
+                <div class="creator-example"><span>防止覆盖</span><i>→</i><span>并发保护</span></div>
+              </div>
+              <div class="creator-rich-card">
+                <h3>推导设计系统</h3>
+                <p>AI 根据“化工企业 + 培训管理”场景，生成稳重、克制、可信的企业级界面。</p>
+                <div class="creator-example"><span>场景约束</span><i>→</i><span>企业级体验</span></div>
+              </div>
+              <div class="creator-rich-card">
+                <h3>落到真实界面</h3>
+                <p>规则最终体现在权限视角、上传入口、数据提示和可追溯记录中。</p>
+                <div class="creator-mini-shot">
+                  <img src="assets/department-table.png" alt="权限控制后的部门视角" data-zoom data-full="assets/department-full.png" data-caption="本部门培训计划完成页面.png：权限控制后的部门视角" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide two-row" data-title="流程重构">
+        <div class="slide-inner two-row">
+          <div class="slide-title">
+            <p class="kicker">改的不是界面，是流程</p>
+            <h2 class="gradient-text">同一件事，协作模式被重写</h2>
+          </div>
+          <div class="rewrite-layout">
+            <div class="glass legacy-board">
+              <div class="board-title">
+                <h3>旧流程：人在追流程</h3>
+                <span>散落 / 追问 / 现拼</span>
+              </div>
+              <div class="legacy-items">
+                <div class="legacy-card"><b>XLS</b><span>计划发到群里，各部门各自下载，版本开始分叉。</span></div>
+                <div class="legacy-card"><b>群聊</b><span>照片、签到表、考核记录在聊天中漂流，容易过期。</span></div>
+                <div class="legacy-card"><b>私聊</b><span>专员逐个追问进度，状态全靠人工同步。</span></div>
+                <div class="legacy-card"><b>PPT</b><span>季度汇报再手工筛选、求和、截图、粘贴。</span></div>
+              </div>
+              <div class="legacy-warning">结果：信息不透明，材料不可控，统计每次重新做一遍。</div>
+            </div>
+            <div class="rewrite-bridge">
+              <strong>→</strong>
+              <span>流程重写</span>
+            </div>
+            <div class="glass new-board">
+              <div class="board-title">
+                <h3>新流程：系统驱动流程</h3>
+                <span>唯一版本 / 主动更新 / 实时看板</span>
+              </div>
+              <div class="new-flow-list">
+                <div class="flow-stage">
+                  <span class="node-index">1</span>
+                  <div><b>在线发布</b><p>管理员发布年度计划，飞书内实时可见唯一版本。</p></div>
+                  <div class="stage-proof">版本不再漂移</div>
+                </div>
+                <div class="flow-stage">
+                  <span class="node-index">2</span>
+                  <div><b>部门推进</b><p>负责人只看本部门任务，主动更新完成状态。</p></div>
+                  <div class="stage-proof">进度不再靠追问</div>
+                </div>
+                <div class="flow-stage">
+                  <span class="node-index">3</span>
+                  <div><b>现场归档</b><p>手机端上传签到表和现场照片，材料进入云空间。</p></div>
+                  <div class="stage-proof">材料不再丢失</div>
+                </div>
+                <div class="flow-stage">
+                  <span class="node-index">4</span>
+                  <div><b>数据复盘</b><p>看板自动汇总部门、季度和完成率，打开即得。</p></div>
+                  <div class="stage-proof">统计不再现拼</div>
+                </div>
+              </div>
+              <div class="rewrite-shot-row">
+                <div class="rewrite-shot">
+                  <img src="assets/upload-panel.png" alt="材料上传页面局部" data-zoom data-full="assets/upload-full.png" data-caption="材料上传页面.png：现场材料上传" />
+                  <span>手机端上传</span>
+                </div>
+                <div class="rewrite-shot">
+                  <img src="assets/dashboard-charts.png" alt="看板统计局部" data-zoom data-full="assets/dashboard-full.png" data-caption="看板页面.png：实时数据复盘" />
+                  <span>看板实时汇总</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide two-row" data-title="数据实证">
+        <div class="slide-inner two-row">
+          <div class="slide-title">
+            <p class="kicker">效率提升可以被量化</p>
+            <h2 class="gradient-text">数据基于 2026 年度计划与试运行情况</h2>
+            <p>覆盖 13 个部门、54 项年度培训计划。</p>
+          </div>
+          <div>
+            <div class="metrics-grid metrics-grid-data">
+              <div class="metric-card"><strong>4天</strong><b>应用构建周期</b><span>传统 4 到 8 周，缩短 90% 以上。</span></div>
+              <div class="metric-card"><strong>24倍</strong><b>计划查询提速</b><span>约 2 分钟降至约 5 秒。</span></div>
+              <div class="metric-card"><strong>实时</strong><b>季度统计汇报</b><span>从约 30 分钟整理降至打开即得。</span></div>
+              <div class="metric-card"><strong>0</strong><b>材料遗失率</b><span>由约 20% 降为 0，材料统一归档。</span></div>
+              <div class="metric-card"><strong>2h</strong><b>每周节省</b><span>减少统计和沟通时间。</span></div>
+              <div class="metric-card"><strong>100h</strong><b>全年节省</b><span>约 12.5 个工作日，只是一个培训场景。</span></div>
+            </div>
+            <div class="data-proof-banner">
+              <img src="assets/data-evidence-flow.png" alt="材料归档到云空间并进入实时看板的数据流示意图" data-zoom data-full="assets/data-evidence-flow.png" data-caption="数据实证横幅：材料归档、云空间、安全留痕与实时看板" />
+              <div class="data-proof-content">
+                <div class="data-proof-title">
+                  <b>从材料归档到实时看板，效率提升有完整证据链</b>
+                  <span>年度计划、部门推进、证明材料和看板统计在同一条业务链路中沉淀。</span>
+                </div>
+                <div class="data-proof-tags">
+                  <span>真实使用数据</span>
+                  <span>云空间归档</span>
+                  <span>实时看板复盘</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide two-row" data-title="方法论">
+        <div class="slide-inner two-row">
+          <div class="slide-title">
+            <p class="kicker">可复制的方法论</p>
+            <h2 class="gradient-text">沉淀出一套四步 AI 对话构建法</h2>
+          </div>
+          <div class="method-layout">
+            <div class="method-quote">
+              <p class="large">每一步都是：用自然语言描述业务需求，AI 理解意图后输出系统能力。</p>
+              <p class="subhead">作品价值不止于培训系统本身，更在于证明普通业务人员也能复用这套构建方式。</p>
+            </div>
+            <div class="method-steps">
+              <div class="method-step">
+                <span class="node-index">1</span>
+                <div><h3>搭骨架</h3><p>描述页面、角色、数据关系：四个页面、两种角色、两类记录。</p></div>
+              </div>
+              <div class="method-step">
+                <span class="node-index">2</span>
+                <div><h3>填血肉</h3><p>细化统计卡、图表、列表和数据来源。</p></div>
+              </div>
+              <div class="method-step">
+                <span class="node-index">3</span>
+                <div><h3>定规则</h3><p>明确权限、约束和异常处理。</p></div>
+              </div>
+              <div class="method-step">
+                <span class="node-index">4</span>
+                <div><h3>调细节</h3><p>打磨加载、空态、错误态、删除确认和上传反馈。</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide two-row" data-title="场景迁移">
+        <div class="slide-inner two-row">
+          <div class="slide-title">
+            <p class="kicker">推广价值</p>
+            <h2 class="gradient-text">这套模式可以迁移到更多企业管理场景</h2>
+          </div>
+          <div class="migration-layout">
+            <div class="four-piece">
+              <h3>可迁移的“四件套”</h3>
+              <div class="piece"><span class="node-index">1</span><b>计划制定</b></div>
+              <div class="piece"><span class="node-index">2</span><b>执行跟踪</b></div>
+              <div class="piece"><span class="node-index">3</span><b>材料归档</b></div>
+              <div class="piece"><span class="node-index">4</span><b>数据看板</b></div>
+            </div>
+            <div>
+              <div class="scenario-grid">
+                <div class="scenario-token">安全检查</div>
+                <div class="scenario-token">设备巡检</div>
+                <div class="scenario-token">供应商评估</div>
+                <div class="scenario-token">合同审批</div>
+                <div class="scenario-token">客诉跟踪</div>
+                <div class="scenario-token">排班管理</div>
+                <div class="scenario-token">绩效考核</div>
+                <div class="scenario-token">会议室预订</div>
+              </div>
+              <div class="platform-notes">
+                <span>多端运行，无需额外部署</span>
+                <span>复用飞书组织架构</span>
+                <span>更换数据即可复制</span>
+                <span>需求变化继续对话迭代</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide final-slide" data-title="总结">
+        <div class="final-bg"></div>
+        <div class="slide-inner">
+          <div class="brand-row">
+            <div></div>
+            <div class="kicker">范式改变</div>
+          </div>
+          <div class="final-content">
+            <h2 class="gradient-text">这不是效率提升，这是范式改变</h2>
+            <div class="final-points">
+              <div>AI 能把业务语言转化为系统能力。</div>
+              <div>飞书妙搭能把应用接入真实办公生态。</div>
+              <div>企业管理可以从“人追流程”变成“系统驱动流程”。</div>
+            </div>
+            <p class="gold-line">一个人、零代码，让 13 个部门、54 项年度培训计划，进入可追踪、可归档、可复盘的管理闭环。</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="dots" id="dots" aria-label="页面导航"></div>
+  <div class="nav" aria-label="翻页控制">
+    <button class="nav-btn" type="button" id="prev" aria-label="上一页" title="上一页">‹</button>
+    <div class="counter" id="counter">1 / 12</div>
+    <button class="nav-btn" type="button" id="next" aria-label="下一页" title="下一页">›</button>
+  </div>
+  <div class="progress" aria-hidden="true"><span id="progress"></span></div>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="图片放大查看">
+    <button class="modal-close" type="button" id="modalClose" aria-label="关闭">×</button>
+    <figure>
+      <img id="modalImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="" />
+      <figcaption id="modalCaption"></figcaption>
+    </figure>
+  </div>
+
+  <script>
+    const track = document.getElementById("track");
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const prev = document.getElementById("prev");
+    const next = document.getElementById("next");
+    const counter = document.getElementById("counter");
+    const progress = document.getElementById("progress");
+    const dots = document.getElementById("dots");
+    const modal = document.getElementById("modal");
+    const modalImage = document.getElementById("modalImage");
+    const modalCaption = document.getElementById("modalCaption");
+    const modalClose = document.getElementById("modalClose");
+    let index = 0;
+
+    slides.forEach((slide, i) => {
+      const dot = document.createElement("button");
+      dot.className = "dot";
+      dot.type = "button";
+      dot.setAttribute("aria-label", `跳转到第 ${i + 1} 页：${slide.dataset.title || ""}`);
+      dot.addEventListener("click", () => goTo(i));
+      dots.appendChild(dot);
+    });
+
+    function goTo(nextIndex) {
+      index = Math.max(0, Math.min(slides.length - 1, nextIndex));
+      track.style.transform = `translateX(-${index * 100}vw)`;
+      counter.textContent = `${index + 1} / ${slides.length}`;
+      progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+      dots.querySelectorAll(".dot").forEach((dot, i) => dot.classList.toggle("active", i === index));
+      prev.disabled = index === 0;
+      next.disabled = index === slides.length - 1;
+    }
+
+    prev.addEventListener("click", () => goTo(index - 1));
+    next.addEventListener("click", () => goTo(index + 1));
+
+    window.addEventListener("keydown", event => {
+      if (modal.classList.contains("open")) {
+        if (event.key === "Escape") closeModal();
+        return;
+      }
+      if (["ArrowRight", "PageDown", " "].includes(event.key)) {
+        event.preventDefault();
+        goTo(index + 1);
+      }
+      if (["ArrowLeft", "PageUp"].includes(event.key)) {
+        event.preventDefault();
+        goTo(index - 1);
+      }
+      if (event.key === "Home") goTo(0);
+      if (event.key === "End") goTo(slides.length - 1);
+    });
+
+    document.querySelectorAll("[data-zoom]").forEach(img => {
+      img.addEventListener("click", () => {
+        modalImage.src = img.dataset.full || img.src;
+        modalImage.alt = img.alt || "演示截图";
+        modalCaption.textContent = img.dataset.caption || img.alt || "";
+        modal.classList.add("open");
+      });
+    });
+
+    function closeModal() {
+      modal.classList.remove("open");
+      modalImage.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
+    }
+
+    modalClose.addEventListener("click", closeModal);
+    modal.addEventListener("click", event => {
+      if (event.target === modal) closeModal();
+    });
+
+    let touchStartX = 0;
+    window.addEventListener("touchstart", event => {
+      touchStartX = event.changedTouches[0].clientX;
+    }, { passive: true });
+    window.addEventListener("touchend", event => {
+      const delta = event.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(delta) > 50) goTo(index + (delta < 0 ? 1 : -1));
+    }, { passive: true });
+
+    goTo(0);
+  </script>
+</body>
+</html>
